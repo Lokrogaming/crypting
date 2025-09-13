@@ -181,6 +181,7 @@
   <div class="row">
     <input id="genPassword" type="text" readonly />
     <button id="copyGenPwBtn" class="copy-btn">📋 Kopieren</button>
+    <button id="reloadPw">Neues Passwort generieren</button>
   </div>
 
   <!-- Plaintext -->
@@ -324,7 +325,10 @@ document.getElementById('copyOutBtn').addEventListener('click', ()=>{
     alert("Code kopiert 📋");
   }
 });
-
+document.getElementById("reloadPw").addEventListener('click', ()=>{
+  window.reload()^
+    }
+                                                    );
 /* Darkmode Toggle */
 const darkBtn = document.getElementById("darkModeBtn");
 darkBtn.addEventListener("click", ()=>{
