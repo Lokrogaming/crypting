@@ -5,36 +5,67 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>AES-GCM Passwortverschlüsselung</title>
 <style>
+  :root {
+    --bg: #eef2f3;
+    --bg-container: #fff;
+    --text: #222;
+    --text-light: #666;
+    --btn: #4A90E2;
+    --btn-hover: #357ABD;
+    --btn-copy: #27ae60;
+    --btn-copy-hover: #1e8449;
+    --btn-secondary: #666;
+    --btn-secondary-hover: #444;
+  }
+
+  body.dark {
+    --bg: #121212;
+    --bg-container: #1e1e1e;
+    --text: #f5f5f5;
+    --text-light: #aaa;
+    --btn: #2980b9;
+    --btn-hover: #1f6391;
+    --btn-copy: #2ecc71;
+    --btn-copy-hover: #27ae60;
+    --btn-secondary: #888;
+    --btn-secondary-hover: #aaa;
+  }
+
   body {
     font-family: "Segoe UI", Roboto, Arial, sans-serif;
-    background: linear-gradient(135deg, #eef2f3, #dfe9f3);
+    background: var(--bg);
     margin: 0;
     padding: 20px;
     display: flex;
     justify-content: center;
+    transition: background 0.4s ease, color 0.4s ease;
   }
 
   .container {
-    background: #fff;
+    background: var(--bg-container);
     border-radius: 16px;
     box-shadow: 0 6px 18px rgba(0,0,0,0.15);
     padding: 24px;
     max-width: 700px;
     width: 100%;
+    color: var(--text);
+    transition: background 0.4s ease, color 0.4s ease;
   }
 
   h1 {
     margin-top: 0;
     font-size: 1.8rem;
     text-align: center;
-    color: #333;
+    color: var(--text);
+    transition: color 0.4s ease;
   }
 
   label {
     font-weight: 600;
     margin-top: 12px;
     display: block;
-    color: #222;
+    color: var(--text);
+    transition: color 0.4s ease;
   }
 
   input, textarea {
@@ -45,12 +76,14 @@
     margin-top: 6px;
     margin-bottom: 12px;
     font-size: 1rem;
-    transition: border 0.2s;
+    transition: border 0.2s, background 0.4s ease, color 0.4s ease;
+    background: var(--bg-container);
+    color: var(--text);
   }
 
   input:focus, textarea:focus {
     outline: none;
-    border-color: #4A90E2;
+    border-color: var(--btn);
     box-shadow: 0 0 6px rgba(74,144,226,0.3);
   }
 
@@ -68,18 +101,18 @@
 
   button {
     flex: 1;
-    background: #4A90E2;
+    background: var(--btn);
     color: #fff;
     border: none;
     border-radius: 8px;
     padding: 10px;
     font-size: 1rem;
     cursor: pointer;
-    transition: background 0.2s, transform 0.1s;
+    transition: background 0.2s, transform 0.1s, color 0.4s ease;
   }
 
   button:hover {
-    background: #357ABD;
+    background: var(--btn-hover);
   }
 
   button:active {
@@ -87,30 +120,59 @@
   }
 
   .secondary {
-    background: #666;
+    background: var(--btn-secondary);
   }
 
   .secondary:hover {
-    background: #444;
+    background: var(--btn-secondary-hover);
   }
 
   .copy-btn {
-    background: #27ae60;
+    background: var(--btn-copy);
   }
 
   .copy-btn:hover {
-    background: #1e8449;
+    background: var(--btn-copy-hover);
   }
 
   .small {
     font-size: 0.9rem;
-    color: #666;
+    color: var(--text-light);
     margin-bottom: 12px;
     text-align: center;
+    transition: color 0.4s ease;
+  }
+
+  /* Darkmode Toggle */
+  .dark-toggle {
+    position: absolute;
+    top: 16px;
+    right: 20px;
+    background: var(--btn-secondary);
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+  }
+
+  .dark-toggle:hover {
+    background: var(--btn-secondary-hover);
+    transform: rotate(20deg);
+  }
+
+  @media (max-width: 600px) {
+    .row { flex-direction: column; }
+    button { flex: none; width: 100%; }
   }
 </style>
 </head>
 <body>
+<button id="darkModeBtn" class="dark-toggle">🌙</button>
+
 <div class="container">
   <h1>AES-GCM Passwortverschlüsselung</h1>
   <p class="small">Die Ausgabe ist Base64(salt||iv||ciphertext). Passwort wird automatisch generiert.</p>
@@ -118,7 +180,7 @@
   <label>Generiertes Passwort</label>
   <div class="row">
     <input id="password" type="text" readonly />
-    <button id="copyPwBtn" class="copy-btn">📋 Passwort kopieren</button>
+    <button id="copyPwBtn" class="copy-btn">📋 Passwort</button>
   </div>
 
   <label>Plaintext (zum Verschlüsseln)</label>
@@ -132,7 +194,7 @@
 
   <label>Base64 (Salt||IV||Ciphertext)</label>
   <textarea id="output" placeholder="Base64-Ausgabe"></textarea>
-  <button id="copyOutBtn" class="copy-btn">📋 Code kopieren</button>
+  <button id="copyOutBtn" class="copy-btn">📋 Code</button>
 </div>
 
 <script>
@@ -172,7 +234,7 @@ function randBytes(len){
   return b;
 }
 
-/* Passwort-Generator (Buchstaben + Zahlen) */
+/* Passwort-Generator */
 function generatePassword(length=16){
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   let result = "";
@@ -254,6 +316,13 @@ document.getElementById('copyOutBtn').addEventListener('click', ()=>{
     navigator.clipboard.writeText(out);
     alert("Code kopiert 📋");
   }
+});
+
+/* Darkmode Toggle */
+const darkBtn = document.getElementById("darkModeBtn");
+darkBtn.addEventListener("click", ()=>{
+  document.body.classList.toggle("dark");
+  darkBtn.textContent = document.body.classList.contains("dark") ? "☀️" : "🌙";
 });
 </script>
 </body>
