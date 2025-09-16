@@ -1,14 +1,14 @@
 [
     {
         "latest": true,
-        "filepath": "/v.0.25-latest.html",
+        "filepath": "versions/v.0.25-latest.html",
         "name": "0.25.0",
         "category": "latest"
     },
     {
         "latest": false,
         "pre": true,
-        "filepath": "/v.0.5-pre.html",
+        "filepath": "versions/PRE/v.0.5-pre.html",
         "name": "0.5.0 Beta",
         "category": "pre"
     },
@@ -16,7 +16,7 @@
         "latest": false,
         "pre": false,
         "dev": true,
-        "filepath": "/v.0.75-pre-encrypt.html",
+        "filepath": "versions/PRE/V0.75/v.0.75-pre-encrypt.html",
         "name": "0.75 Encrypt Dev",
         "category": "encrypt"
     },
@@ -24,11 +24,12 @@
         "latest": false,
         "pre": false,
         "dev": true,
-        "filepath": "/v.0.75-pre-decrypt.html",
+        "filepath": "versions/PRE/V0.75/v.0.75-pre-decrypt.html",
         "name": "0.75 Decrypt Dev",
         "category": "decrypt"
     }
 
 ]
+
 
 
