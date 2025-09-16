@@ -111,7 +111,9 @@ More comprehensive version at shenanigans.shoghisimon.ca/collection/css
   .content {
     z-index: 99;
     position: relative;
-    
+    display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 Spalten */
+  gap: 10px; /* Abstand zwischen den Items */
   }
   .box {
     background: var(--bg-container);
@@ -533,6 +535,7 @@ More comprehensive version at shenanigans.shoghisimon.ca/collection/css
         </script>
         </body>
 </html>
+
 
 
 
