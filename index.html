@@ -26,16 +26,17 @@ More comprehensive version at shenanigans.shoghisimon.ca/collection/css
   src: url("https://lokrogaming.github.io/fonts/VarelaRound-Regular.ttf") format("truetype");
 }
   html, body {
-  height: 100%;
+    height: 100%;
   margin: 0;
   padding: 0;
   align-items: center;
   flex-direction: column;
   display: flex;
   justify-content: center;
-  font-family: "Varela Round"
+  font-family: "Varela Round";
+  
 }
-  .container {
+  /*.container {
   position: fixed;
   width: 100%;
   height: 100%;
@@ -60,6 +61,18 @@ More comprehensive version at shenanigans.shoghisimon.ca/collection/css
   background-size: var(--gap) var(--gap);
   background-repeat: repeat;
 }
+*/
+/* From Uiverse.io by kennyotsu */ 
+.container {
+  width: 100%;
+  height: 100%;
+  /* Add your background pattern here */
+  background-color: #1f1f1f;
+  background-image: radial-gradient(rgba(112, 112, 112, 0.144) 2px, transparent 0);
+  background-size: 30px 30px;
+  background-position: -5px -5px;
+  position: fixed;
+}
   .content {
     z-index: 99;
     position: relative;
@@ -68,12 +81,12 @@ More comprehensive version at shenanigans.shoghisimon.ca/collection/css
   .box {
     background: var(--bg-container);
     border-radius: 16px;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+    box-shadow: 0 0 100px white;
     padding: 24px;
     max-width: 700px;
     width: 100%;
     color: var(--text);
-    transition: background 0.4s ease, color 0.4s ease;
+    
   }
 
   h1 {
@@ -132,7 +145,7 @@ More comprehensive version at shenanigans.shoghisimon.ca/collection/css
     padding: 10px;
     font-size: 1rem;
     cursor: pointer;
-    transition: background 0.2s, transform 0.1s, color 0.4s ease;
+    
   }
 
   button:hover {
@@ -192,6 +205,11 @@ More comprehensive version at shenanigans.shoghisimon.ca/collection/css
   #versionsDisplay li a {
   color: black;
   text-decoration: none;
+
+  }
+  .settings {
+    bottom: 1%;
+    right: 1%;
 
   }
   @media (max-width: 600px) {
@@ -331,11 +349,27 @@ More comprehensive version at shenanigans.shoghisimon.ca/collection/css
     left: -68%;
   }
 }
+.sorter {
+  background-color: transparent;
+  z-index: 10;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  align-items: center;
+  flex-direction: column;
+  display: flex;
+  justify-content: center;
+  font-family: "Varela Round";
+  height: 100%;
+  width: 100%;
+}
   </style>
 </head>
 
     <body>
+       
         <div class="container"></div>
+    
         <div class="content box">
           <div class="dev-toggle-container">
            
@@ -349,7 +383,7 @@ More comprehensive version at shenanigans.shoghisimon.ca/collection/css
       </div>
     </div>
   </label><br>
-              Dev Mode aktivieren
+              Developer Mode aktivieren
             
           </div>
           <select id="versions"></select>
@@ -375,40 +409,75 @@ More comprehensive version at shenanigans.shoghisimon.ca/collection/css
           }
       
           function renderVersions() {
-            // Leere vorherige Inhalte
-            versionsSelect.innerHTML = "";
-            versionsList.innerHTML = "";
-      
-            // Ob Dev Mode an ist
-            const devMode = devModeToggle.checked;
-      
-            // Filter je nach devMode
-            const filteredData = data.filter(item => {
-              if (!devMode) {
-                // Ohne Dev Mode: nur normale Versionen (dev === false && pre === false)
-                return !item.dev && !item.pre;
-              }
-              // Mit Dev Mode: alles anzeigen
-              return true;
-            });
-      
-            filteredData.forEach(item => {
-              // Option mit name als Text und filepath als Wert
-              const option = document.createElement("option");
-              option.value = item.filepath;
-              option.textContent = item.name;
-              versionsSelect.appendChild(option);
-      
-              // Listeneintrag mit Link
-              const li = document.createElement("li");
-              const a = document.createElement("a");
-              a.href = item.filepath;
-              a.textContent = item.name;
-              a.target = "_blank"; // öffnet Link in neuem Tab
-              li.appendChild(a);
-              versionsList.appendChild(li);
-            });
-          }
+  // Leere vorherige Inhalte
+  versionsSelect.innerHTML = "";
+  versionsList.innerHTML = "";
+
+  const devMode = devModeToggle.checked;
+
+  // Filter je nach devMode
+  const filteredData = data.filter(item => {
+    if (!devMode) {
+      return !item.dev && !item.pre;
+    }
+    return true;
+  });
+
+  // Gruppiere nach Kategorie
+  const groupedByCategory = {};
+  filteredData.forEach(item => {
+    const category = item.category || "Unsortiert";
+    if (!groupedByCategory[category]) {
+      groupedByCategory[category] = [];
+    }
+    groupedByCategory[category].push(item);
+  });
+
+  // Hilfsfunktion zur Sortierung nach Tags
+  function tagPriority(item) {
+    if (item.latest) return 0;
+    if (item.dev) return 2;
+    if (item.pre) return 1;
+    return 3; // Standard
+  }
+
+  // Für jede Kategorie anzeigen
+  for (const category in groupedByCategory) {
+    const items = groupedByCategory[category];
+
+    // Sortiere innerhalb der Kategorie nach Tag-Priorität
+    items.sort((a, b) => tagPriority(a) - tagPriority(b));
+
+    // Optional: Füge eine Überschrift in der Liste hinzu
+    const catHeader = document.createElement("h3");
+    catHeader.textContent = category;
+    versionsList.appendChild(catHeader);
+
+    // Optional: optgroup im select
+    const optGroup = document.createElement("optgroup");
+    optGroup.label = category;
+
+    items.forEach(item => {
+      // Select-Option
+      const option = document.createElement("option");
+      option.value = item.filepath;
+      option.textContent = item.name;
+      optGroup.appendChild(option);
+
+      // Link-Liste
+      const li = document.createElement("li");
+      const a = document.createElement("a");
+      a.href = item.filepath;
+      a.textContent = item.name;
+      a.target = "_blank";
+      li.appendChild(a);
+      versionsList.appendChild(li);
+    });
+
+    versionsSelect.appendChild(optGroup);
+  }
+}
+
       
           // Event, wenn Checkbox umgeschaltet wird
           devModeToggle.addEventListener("change", () => {
@@ -427,3 +496,4 @@ More comprehensive version at shenanigans.shoghisimon.ca/collection/css
         </script>
         </body>
 </html>
+
