@@ -1,20 +1,23 @@
 [
     {
         "latest": true,
-        "filepath": "/v.0.25-pre.html",
-        "name": "0.25.0"
+        "filepath": "/v.0.25-latest.html",
+        "name": "0.25.0",
+        "category": "latest"
     },
     {
         "latest": false,
         "pre": true,
         "filepath": "/v.0.5-pre.html",
-        "name": "0.5.0 Beta"
+        "name": "0.5.0 Beta",
+        "category": "pre"
     },
     {
         "latest": false,
         "pre": false,
         "dev": true,
-        "filepath": "/v.0.75-pre.html",
-        "name": "0.75 Dev"
+        "filepath": "/v.0.75-pre-encrypt.html",
+        "name": "0.75 Dev",
+        "category": "encrypt",
     }
 ]
