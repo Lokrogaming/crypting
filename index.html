@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Main Menu</title>
+  <style>
+    /* From Uiverse.io by marsella_3472 */ 
+/*
+More comprehensive version at shenanigans.shoghisimon.ca/collection/css
+ */
+ :root {
+    --bg: #eef2f3;
+    --bg-container: #fff;
+    --text: #222;
+    --text-light: #666;
+    --btn: #4A90E2;
+    --btn-hover: #357ABD;
+    --btn-copy: #27ae60;
+    --btn-copy-hover: #1e8449;
+    --btn-secondary: #666;
+    --btn-secondary-hover: #444;
+  }
+  @font-face {
+  font-family: "Varela Round";
+  src: url("https://lokrogaming.github.io/fonts/VarelaRound-Regular.ttf") format("truetype");
+}
+  html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  align-items: center;
+  flex-direction: column;
+  display: flex;
+  justify-content: center;
+  font-family: "Varela Round"
+}
+  .container {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  background: #000000;
+  --gap: 5em;
+  --line: 1px;
+  --color: rgba(255, 255, 255, 0.2);
+
+  background-image: linear-gradient(
+      -90deg,
+      transparent calc(var(--gap) - var(--line)),
+      var(--color) calc(var(--gap) - var(--line) + 1px),
+      var(--color) var(--gap)
+    ),
+    linear-gradient(
+      0deg,
+      transparent calc(var(--gap) - var(--line)),
+      var(--color) calc(var(--gap) - var(--line) + 1px),
+      var(--color) var(--gap)
+    );
+  background-size: var(--gap) var(--gap);
+  background-repeat: repeat;
+}
+  .content {
+    z-index: 99;
+    position: relative;
+    
+  }
+  .box {
+    background: var(--bg-container);
+    border-radius: 16px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+    padding: 24px;
+    max-width: 700px;
+    width: 100%;
+    color: var(--text);
+    transition: background 0.4s ease, color 0.4s ease;
+  }
+
+  h1 {
+    margin-top: 0;
+    font-size: 1.8rem;
+    text-align: center;
+    color: var(--text);
+    transition: color 0.4s ease;
+  }
+
+  label {
+    font-weight: 600;
+    margin-top: 12px;
+    display: block;
+    color: var(--text);
+    transition: color 0.4s ease;
+  }
+
+  input, textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin-top: 6px;
+    margin-bottom: 12px;
+    font-size: 1rem;
+    transition: border 0.2s, background 0.4s ease, color 0.4s ease;
+    background: var(--bg-container);
+    color: var(--text);
+  }
+
+  input:focus, textarea:focus {
+    outline: none;
+    border-color: var(--btn);
+    box-shadow: 0 0 6px rgba(74,144,226,0.3);
+  }
+
+  textarea {
+    min-height: 120px;
+    resize: vertical;
+  }
+
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  button {
+    flex: 1;
+    background: var(--btn);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s, color 0.4s ease;
+  }
+
+  button:hover {
+    background: var(--btn-hover);
+  }
+
+  button:active {
+    transform: scale(0.97);
+  }
+
+  .secondary {
+    background: var(--btn-secondary);
+  }
+
+  .secondary:hover {
+    background: var(--btn-secondary-hover);
+  }
+
+  .copy-btn {
+    background: var(--btn-copy);
+  }
+
+  .copy-btn:hover {
+    background: var(--btn-copy-hover);
+  }
+
+  .small {
+    font-size: 0.9rem;
+    color: var(--text-light);
+    margin-bottom: 12px;
+    text-align: center;
+    transition: color 0.4s ease;
+  }
+
+  .dark-toggle {
+    position: absolute;
+    top: 16px;
+    right: 20px;
+    background: var(--btn-secondary);
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+  }
+
+  .dark-toggle:hover {
+    background: var(--btn-secondary-hover);
+    transform: rotate(20deg);
+  }
+  ul {
+    list-style-type: none;
+  }
+  #versionsDisplay li a {
+  color: black;
+  text-decoration: none;
+
+  }
+  @media (max-width: 600px) {
+    .row { flex-direction: column; }
+    button { flex: none; width: 100%; }
+  }
+  /* From Uiverse.io by Admin12121 */ 
+.switch-button {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  justify-content: center;
+  justify-content: center;
+  margin: auto;
+  height: 55px;
+}
+
+.switch-button .switch-outer {
+  height: 100%;
+  background: #252532;
+  width: 115px;
+  border-radius: 165px;
+  -webkit-box-shadow: inset 0px 5px 10px 0px #16151c, 0px 3px 6px -2px #403f4e;
+  box-shadow: inset 0px 5px 10px 0px #16151c, 0px 3px 6px -2px #403f4e;
+  border: 1px solid #32303e;
+  padding: 6px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.switch-button .switch-outer input[type="checkbox"] {
+  opacity: 0;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  position: absolute;
+}
+
+.switch-button .switch-outer .button-toggle {
+  height: 42px;
+  width: 42px;
+  background: -webkit-gradient(
+    linear,
+    left top,
+    left bottom,
+    from(#3b3a4e),
+    to(#272733)
+  );
+  background: -o-linear-gradient(#3b3a4e, #272733);
+  background: linear-gradient(#3b3a4e, #272733);
+  border-radius: 100%;
+  -webkit-box-shadow: inset 0px 5px 4px 0px #424151, 0px 4px 15px 0px #0f0e17;
+  box-shadow: inset 0px 5px 4px 0px #424151, 0px 4px 15px 0px #0f0e17;
+  position: relative;
+  z-index: 2;
+  -webkit-transition: left 0.3s ease-in;
+  -o-transition: left 0.3s ease-in;
+  transition: left 0.3s ease-in;
+  left: 0;
+}
+
+.switch-button
+  .switch-outer
+  input[type="checkbox"]:checked
+  + .button
+  .button-toggle {
+  left: 58%;
+}
+
+.switch-button
+  .switch-outer
+  input[type="checkbox"]:checked
+  + .button
+  .button-indicator {
+  -webkit-animation: indicator 1s forwards;
+  animation: indicator 1s forwards;
+}
+
+.switch-button .switch-outer .button {
+  width: 100%;
+  height: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  position: relative;
+  -webkit-box-pack: justify;
+  justify-content: space-between;
+}
+
+.switch-button .switch-outer .button-indicator {
+  height: 25px;
+  width: 25px;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
+  border-radius: 50%;
+  border: 3px solid #ef565f;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  right: 10px;
+  position: relative;
+}
+
+@-webkit-keyframes indicator {
+  30% {
+    opacity: 0;
+  }
+
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 1;
+    border: 3px solid #60d480;
+    left: -68%;
+  }
+}
+
+@keyframes indicator {
+  30% {
+    opacity: 0;
+  }
+
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 1;
+    border: 3px solid #60d480;
+    left: -68%;
+  }
+}
+  </style>
+</head>
+
+    <body>
+        <div class="container"></div>
+        <div class="content box">
+          <div class="dev-toggle-container">
+           
+              <!-- From Uiverse.io by Admin12121 --> 
+<label class="switch-button" for="switch">
+    <div class="switch-outer">
+      <input id="switch" type="checkbox">
+      <div class="button">
+        <span class="button-toggle"></span>
+        <span class="button-indicator"></span>
+      </div>
+    </div>
+  </label><br>
+              Dev Mode aktivieren
+            
+          </div>
+          <select id="versions"></select>
+          <ul id="versionsDisplay"></ul>
+        </div>
+      
+        <script>
+          let data = [];
+          const versionsSelect = document.getElementById("versions");
+          const versionsList = document.getElementById("versionsDisplay");
+          const devModeToggle = document.getElementById("switch");
+      
+          async function loadVersions() {
+            const url = "https://lokrogaming.github.io/crypting/latest.json";
+            try {
+              const response = await fetch(url);
+              if (!response.ok) throw new Error("Fehler beim Laden der Daten");
+              data = await response.json();
+              renderVersions();
+            } catch (err) {
+              console.error(err);
+            }
+          }
+      
+          function renderVersions() {
+            // Leere vorherige Inhalte
+            versionsSelect.innerHTML = "";
+            versionsList.innerHTML = "";
+      
+            // Ob Dev Mode an ist
+            const devMode = devModeToggle.checked;
+      
+            // Filter je nach devMode
+            const filteredData = data.filter(item => {
+              if (!devMode) {
+                // Ohne Dev Mode: nur normale Versionen (dev === false && pre === false)
+                return !item.dev && !item.pre;
+              }
+              // Mit Dev Mode: alles anzeigen
+              return true;
+            });
+      
+            filteredData.forEach(item => {
+              // Option mit name als Text und filepath als Wert
+              const option = document.createElement("option");
+              option.value = item.filepath;
+              option.textContent = item.name;
+              versionsSelect.appendChild(option);
+      
+              // Listeneintrag mit Link
+              const li = document.createElement("li");
+              const a = document.createElement("a");
+              a.href = item.filepath;
+              a.textContent = item.name;
+              a.target = "_blank"; // öffnet Link in neuem Tab
+              li.appendChild(a);
+              versionsList.appendChild(li);
+            });
+          }
+      
+          // Event, wenn Checkbox umgeschaltet wird
+          devModeToggle.addEventListener("change", () => {
+            renderVersions();
+          });
+      
+          // Event, wenn Version im Select geändert wird
+          versionsSelect.addEventListener("change", () => {
+            const selectedPath = versionsSelect.value;
+            if (selectedPath) {
+              window.open(selectedPath, "_blank");
+            }
+          });
+      
+          loadVersions();
+        </script>
+        </body>
+</html>
