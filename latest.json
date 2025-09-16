@@ -1,20 +1,20 @@
 [
     {
         "latest": true,
-        "filepath": "/v.0.25-pre.html",
+        "filepath": "https://lokrogaming.github.io/crypting/v.0.25-pre.html",
         "name": "0.25.0"
     },
     {
         "latest": false,
         "pre": true,
-        "filepath": "/v.0.5-pre.html",
+        "filepath": "https://lokrogaming.github.io/crypting/v.0.5-pre.html",
         "name": "0.5.0 Beta"
     },
     {
         "latest": false,
         "pre": false,
         "dev": true,
-        "filepath": "/v.0.75-pre.html",
+        "filepath": "https://lokrogaming.github.io/crypting/v.0.75-pre.html",
         "name": "0.75 Dev"
     }
 ]
