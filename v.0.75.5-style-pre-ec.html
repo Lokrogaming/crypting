@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>Nachrichten verschlüsseln</title>
+    <style>
+      :root {
+        /* Dark UI, passend zum schwarzen Grid-Background */
+        --bg: #000000;
+        --text: #f2f2f2;
+        --text-dim: #bdbdbd;
+
+        /* Box: Glass + weißer Glow */
+        --card-bg: rgba(255, 255, 255, 0.06);
+        --card-border: rgba(255, 255, 255, 0.18);
+        --card-shadow: 0 0 80px rgba(255, 255, 255, 0.25),
+          0 24px 64px rgba(0, 0, 0, 0.6);
+
+        /* Focus / Accent in Richtung Cyan, damit es zum „kalten“ Glow passt */
+        --accent: #66e3ff;
+        --accent-weak: rgba(102, 227, 255, 0.35);
+
+        /* Buttons neutral → hover cyan */
+        --btn-bg: rgba(255, 255, 255, 0.08);
+        --btn-bg-hover: rgba(255, 255, 255, 0.12);
+        --btn-border: rgba(255, 255, 255, 0.22);
+
+        --btn-copy-bg: linear-gradient(180deg, #2bd98d, #19b671);
+        --btn-copy-shadow: 0 8px 22px rgba(43, 217, 141, 0.3);
+
+        --radius-lg: 18px;
+        --radius-sm: 12px;
+        --gap: 14px;
+      }
+
+      /* DEIN ursprünglicher Hintergrund (nicht angefasst) */
+      .bgAn {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        background: #000000;
+        --gap: 5em;
+        --line: 1px;
+        --color: rgba(255, 255, 255, 0.12);
+        background-image: linear-gradient(
+            -90deg,
+            transparent calc(var(--gap) - var(--line)),
+            var(--color) calc(var(--gap) - var(--line) + 1px),
+            var(--color) var(--gap)
+          ),
+          linear-gradient(
+            0deg,
+            transparent calc(var(--gap) - var(--line)),
+            var(--color) calc(var(--gap) - var(--line) + 1px),
+            var(--color) var(--gap)
+          );
+        background-size: var(--gap) var(--gap);
+        background-repeat: repeat;
+      }
+
+      /* Layout */
+      body {
+        margin: 0;
+        min-height: 100dvh;
+        background: var(--bg);
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        font-family: "Segoe UI", Roboto, Arial, sans-serif;
+      }
+      .content {
+        position: relative;
+        z-index: 1;
+        width: min(760px, 100%);
+      }
+
+      /* Box im Glass-/Glow-Stil, farblich neutral + weißer Schein */
+      .container {
+        background: var(--card-bg);
+        border-radius: var(--radius-lg);
+        padding: clamp(28px, 4.5vw, 44px);
+        box-shadow: var(--card-shadow);
+        backdrop-filter: blur(14px) saturate(115%);
+        -webkit-backdrop-filter: blur(14px) saturate(115%);
+        border: 1px solid var(--card-border);
+      }
+
+      /* ganz feiner weißer Saum, damit es zum Grid passt */
+      .container::before {
+        content: "";
+        position: absolute;
+        inset: -1px;
+        pointer-events: none;
+        border-radius: inherit;
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.22);
+      }
+
+      h1 {
+        margin: 0 0 10px;
+        font-size: clamp(22px, 3.4vw, 30px);
+        letter-spacing: 0.2px;
+        color: #ffffff;
+        text-shadow: 0 0 24px rgba(255, 255, 255, 0.25);
+      }
+      .small,
+      .subtitle {
+        color: var(--text-dim);
+        margin: 0 0 18px;
+        font-size: 14px;
+      }
+
+      label {
+        display: block;
+        font-weight: 600;
+        margin: 18px 0 8px;
+      }
+
+      textarea,
+      input {
+        width: 100%;
+        color: var(--text);
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: var(--radius-sm);
+        padding: 12px 14px;
+        font-size: 16px;
+        line-height: 1.45;
+        outline: none;
+        transition: box-shadow 0.15s ease, border-color 0.15s ease,
+          background 0.15s ease;
+      }
+      textarea {
+        min-height: 140px;
+        resize: vertical;
+      }
+      textarea:focus,
+      input:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 2px var(--accent-weak),
+          0 0 22px rgba(255, 255, 255, 0.18);
+        background: rgba(255, 255, 255, 0.06);
+      }
+
+      .row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--gap);
+        margin-top: 14px;
+      }
+      @media (max-width: 640px) {
+        .row {
+          flex-direction: column;
+        }
+      }
+
+      .btn {
+        appearance: none;
+        border: none;
+        cursor: pointer;
+        color: #fff;
+        font-weight: 600;
+        font-size: 15px;
+        background: var(--btn-bg);
+        border: 1px solid var(--btn-border);
+        border-radius: 12px;
+        padding: 11px 16px;
+        transition: transform 0.06s ease, background 0.15s ease,
+          border-color 0.15s ease, box-shadow 0.15s ease;
+      }
+      .btn:hover {
+        background: var(--btn-bg-hover);
+        border-color: var(--accent);
+        box-shadow: 0 0 0 2px var(--accent-weak),
+          0 6px 26px rgba(255, 255, 255, 0.18);
+      }
+      .btn:active {
+        transform: translateY(1px);
+      }
+
+      .btn--copy {
+        background: var(--btn-copy-bg);
+        border: none;
+        box-shadow: var(--btn-copy-shadow);
+      }
+      .btn--copy:hover {
+        filter: brightness(1.06);
+        box-shadow: 0 10px 26px rgba(43, 217, 141, 0.36);
+      }
+
+      /* Tiny toast statt alert() */
+      .toast {
+        position: fixed;
+        left: 50%;
+        bottom: 22px;
+        transform: translateX(-50%) translateY(16px);
+        padding: 10px 14px;
+        border-radius: 10px;
+        font-size: 14px;
+        color: #0b0b0f;
+        background: #e7fff7;
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.18s ease, transform 0.18s ease;
+        z-index: 2;
+      }
+      .toast.show {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Dein Grid-Background bleibt -->
+    <div class="bgAn"></div>
+
+    <div class="content">
+      <div class="container">
+        <h1>AES-GCM Passwortverschlüsselung</h1>
+        <p class="small">
+          Ausgabe ist <b>Base64(salt‖iv‖ciphertext)</b>. Passwort wird
+          automatisch generiert und der Ausgabe angehängt.
+        </p>
+
+        <!-- Hidden: generiertes Passwort -->
+        <div style="display: none">
+          <input id="genPassword" type="text" readonly />
+        </div>
+
+        <label for="plaintext">Plaintext (zum Verschlüsseln)</label>
+        <textarea id="plaintext" placeholder="Text hier..."></textarea>
+
+        <div class="row">
+          <button id="encryptBtn" class="btn">🔐 Verschlüsseln</button>
+          <button id="clearBtn" class="btn">🧹 Leeren</button>
+        </div>
+
+        <label for="output">Deine verschlüsselte Nachricht</label>
+        <textarea id="output" placeholder="Base64-Ausgabe"></textarea>
+        <div class="row">
+          <button id="copyOutBtn" class="btn btn--copy">
+            📋 Code kopieren
+          </button>
+        </div>
+
+        <p class="small">
+          Format: <code>Base64(salt‖iv‖ciphertext):PASSWORT</code>
+        </p>
+      </div>
+    </div>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <script>
+      /* ====== Krypto-Parameter ====== */
+      const PBKDF2_ITER = 100000;
+      const SALT_LEN = 16;
+      const IV_LEN = 12;
+      const KEY_LEN = 256;
+
+      /* ====== Helpers ====== */
+      function toast(msg) {
+        const t = document.getElementById("toast");
+        t.textContent = msg;
+        t.classList.add("show");
+        setTimeout(() => t.classList.remove("show"), 1500);
+      }
+      function combineOutput(encrypted, password) {
+        return `${encrypted}:${password}`;
+      }
+      function toBase64(buffer) {
+        return btoa(String.fromCharCode(...new Uint8Array(buffer)));
+      }
+      function fromBase64(b64) {
+        const bin = atob(b64);
+        const bytes = new Uint8Array(bin.length);
+        for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+        return bytes.buffer;
+      }
+      async function deriveKey(password, salt) {
+        const enc = new TextEncoder();
+        const pwKey = await crypto.subtle.importKey(
+          "raw",
+          enc.encode(password),
+          { name: "PBKDF2" },
+          false,
+          ["deriveKey"]
+        );
+        return crypto.subtle.deriveKey(
+          { name: "PBKDF2", salt, iterations: PBKDF2_ITER, hash: "SHA-256" },
+          pwKey,
+          { name: "AES-GCM", length: KEY_LEN },
+          false,
+          ["encrypt", "decrypt"]
+        );
+      }
+      function randBytes(len) {
+        const b = new Uint8Array(len);
+        crypto.getRandomValues(b);
+        return b;
+      }
+      function generatePassword(length = 16) {
+        const chars =
+          "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        let r = "";
+        for (let i = 0; i < length; i++)
+          r += chars.charAt(Math.floor(Math.random() * chars.length));
+        return r;
+      }
+      async function encrypt(password, plainText) {
+        const salt = randBytes(SALT_LEN);
+        const iv = randBytes(IV_LEN);
+        const key = await deriveKey(password, salt);
+        const enc = new TextEncoder();
+        const ct = await crypto.subtle.encrypt(
+          { name: "AES-GCM", iv },
+          key,
+          enc.encode(plainText)
+        );
+        const combined = new Uint8Array(
+          salt.byteLength + iv.byteLength + ct.byteLength
+        );
+        combined.set(salt, 0);
+        combined.set(iv, salt.byteLength);
+        combined.set(new Uint8Array(ct), salt.byteLength + iv.byteLength);
+        return toBase64(combined.buffer);
+      }
+
+      /* ====== UI Logic ====== */
+      const genPasswordField = document.getElementById("genPassword");
+      genPasswordField.value = generatePassword();
+
+      document
+        .getElementById("encryptBtn")
+        .addEventListener("click", async () => {
+          const pw = genPasswordField.value || generatePassword();
+          const pt = document.getElementById("plaintext").value ?? "";
+          try {
+            if (!pt.trim()) {
+              toast("Kein Plaintext 🤨");
+              return;
+            }
+            const b64 = await encrypt(pw, pt);
+            document.getElementById("output").value = combineOutput(b64, pw);
+            toast("Verschlüsselt ✅");
+          } catch (e) {
+            toast("Fehler: " + e.message);
+          }
+        });
+
+      document.getElementById("clearBtn").addEventListener("click", () => {
+        genPasswordField.value = generatePassword();
+        document.getElementById("plaintext").value = "";
+        document.getElementById("output").value = "";
+        toast("Bereinigt 🧽");
+      });
+
+      document.getElementById("copyOutBtn").addEventListener("click", () => {
+        const out = document.getElementById("output").value;
+        if (out) {
+          navigator.clipboard.writeText(out);
+          toast("Kopiert 📋");
+        } else {
+          toast("Nix zum Kopieren 😅");
+        }
+      });
+    </script>
+  </body>
+</html>
