@@ -17,7 +17,16 @@
         "pre": false,
         "dev": true,
         "filepath": "/v.0.75-pre-encrypt.html",
-        "name": "0.75 Dev",
+        "name": "0.75 Encrypt Dev",
         "category": "encrypt",
+    },
+    {
+        "latest": false,
+        "pre": false,
+        "dev": true,
+        "filepath": "/v.0.75-pre-decrypt.html",
+        "name": "0.75 Decrypt Dev",
+        "category": "decrypt",
     }
+
 ]
