@@ -338,9 +338,9 @@
       
       document.getElementById('clearBtn').addEventListener('click', ()=>{
         genPasswordField.value = generatePassword();
-        document.getElementById('decPassword').value = '';
+        document.getElementById('decPassword').value = ''; 
+        document.getElementById('combinedInput').value='';
         document.getElementById('plaintext').value='';
-        document.getElementById('output').value='';
       });
       
       /* Copy Buttons */
@@ -367,4 +367,5 @@
       });
       </script>
 </body>
+
 </html>
