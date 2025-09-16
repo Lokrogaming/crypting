@@ -245,15 +245,17 @@
         <!-- Kombinierte Entschlüsselung -->
 <label>Verschlüsselte Nachricht</label>
 <textarea id="combinedInput" placeholder="Hier verschlüsselte Nachricht eingeben"></textarea>
-<div class="row">
-  <button id="decryptCombinedBtn">Entschlüsseln</button>
-  <button class="secondary" id="clearBtn">Leeren</button>
-</div>
+  <div class="row">
+          <button id="decryptBtn" class="btn">🔐 Verschlüsseln</button>
+          <button id="clearBtn" class="btn">🧹 Leeren</button>
+        </div>
 
         <label>Hier wird die entschlüsselte Nachricht erscheinen</label>
         <textarea id="plaintext" placeholder="Text hier..."></textarea>
+        <button id="copyOutBtn">Kopieren 📋</button>
       </div>
       </div>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
       <script>
       /* Parameter */
       const PBKDF2_ITER = 100000;
@@ -263,7 +265,12 @@
       function combineOutput(encrypted, password) {
   return `${encrypted}:${password}`;
 }
-
+function toast(msg) {
+        const t = document.getElementById("toast");
+        t.textContent = msg;
+        t.classList.add("show");
+        setTimeout(() => t.classList.remove("show"), 1500);
+      }
       function toBase64(buffer) {
         return btoa(String.fromCharCode(...new Uint8Array(buffer)));
       }
@@ -359,21 +366,23 @@
       });
       
       /* Copy Buttons */
-      document.getElementById('copyGenPwBtn').addEventListener('click', ()=>{
-        const pw = genPasswordField.value;
-        if(pw){
-          navigator.clipboard.writeText(pw);
-          alert("Passwort kopiert 📋");
-        }
+      document.getElementById("clearBtn").addEventListener("click", () => {
+        genPasswordField.value = generatePassword();
+        document.getElementById("plaintext").value = "";
+        document.getElementById("output").value = "";
+        toast("Bereinigt 🧽");
       });
-      document.getElementById('copyOutBtn').addEventListener('click', ()=>{
-        const out = document.getElementById('output').value;
-        if(out){
+
+
+      document.getElementById("copyOutBtn").addEventListener("click", () => {
+        const out = document.getElementById("output").value;
+        if (out) {
           navigator.clipboard.writeText(out);
-          alert("Code kopiert 📋");
+          toast("Kopiert 📋");
+        } else {
+          toast("Nix zum Kopieren 😅");
         }
       });
-      
       /* Darkmode Toggle */
       const darkBtn = document.getElementById("darkModeBtn");
       darkBtn.addEventListener("click", ()=>{
