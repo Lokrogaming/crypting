@@ -6,197 +6,212 @@
     <title>Nachrichten verschlüsseln</title>
     <style>
     :root {
-    --bg: #eef2f3;
-    --bg-container: #fff;
-    --text: #222;
-    --text-light: #666;
-    --btn: #4A90E2;
-    --btn-hover: #357ABD;
-    --btn-copy: #27ae60;
-    --btn-copy-hover: #1e8449;
-    --btn-secondary: #666;
-    --btn-secondary-hover: #444;
-  }
+        /* Dark UI, passend zum schwarzen Grid-Background */
+        --bg: #000000;
+        --text: #f2f2f2;
+        --text-dim: #bdbdbd;
 
-  body.dark {
-    --bg: #121212;
-    --bg-container: #1e1e1e;
-    --text: #f5f5f5;
-    --text-light: #aaa;
-    --btn: #2980b9;
-    --btn-hover: #1f6391;
-    --btn-copy: #2ecc71;
-    --btn-copy-hover: #27ae60;
-    --btn-secondary: #888;
-    --btn-secondary-hover: #aaa;
-  }
+        /* Box: Glass + weißer Glow */
+        --card-bg: rgba(255, 255, 255, 0.06);
+        --card-border: rgba(255, 255, 255, 0.18);
+        --card-shadow: 0 0 80px rgba(255, 255, 255, 0.25),
+          0 24px 64px rgba(0, 0, 0, 0.6);
 
-  body {
-    font-family: "Segoe UI", Roboto, Arial, sans-serif;
-    background: var(--bg);
-    margin: 0;
-    padding: 20px;
-    display: flex;
-    justify-content: center;
-    transition: background 0.4s ease, color 0.4s ease;
-  }
-  .bgAn {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  background: #000000;
-  --gap: 5em;
-  --line: 1px;
-  --color: rgba(255, 255, 255, 0.2);
+        /* Focus / Accent in Richtung Cyan, damit es zum „kalten“ Glow passt */
+        --accent: #66e3ff;
+        --accent-weak: rgba(102, 227, 255, 0.35);
 
-  background-image: linear-gradient(
-      -90deg,
-      transparent calc(var(--gap) - var(--line)),
-      var(--color) calc(var(--gap) - var(--line) + 1px),
-      var(--color) var(--gap)
-    ),
-    linear-gradient(
-      0deg,
-      transparent calc(var(--gap) - var(--line)),
-      var(--color) calc(var(--gap) - var(--line) + 1px),
-      var(--color) var(--gap)
-    );
-  background-size: var(--gap) var(--gap);
-  background-repeat: repeat;
-}
-  .content {
-    z-index: 99;
-    position: relative;
-    
-  }
-  .container {
-    background: var(--bg-container);
-    border-radius: 16px;
-    
-    padding: 50px;
-    max-width: 700px;
-    width: 100%;
-    color: var(--text);
-    transition: background 0.4s ease, color 0.4s ease;
-    box-shadow: 0 0 100px white;
-  }
+        /* Buttons neutral → hover cyan */
+        --btn-bg: rgba(255, 255, 255, 0.08);
+        --btn-bg-hover: rgba(255, 255, 255, 0.12);
+        --btn-border: rgba(255, 255, 255, 0.22);
 
-  h1 {
-    margin-top: 0;
-    font-size: 1.8rem;
-    text-align: center;
-    color: var(--text);
-    transition: color 0.4s ease;
-  }
+        --btn-copy-bg: linear-gradient(180deg, #2bd98d, #19b671);
+        --btn-copy-shadow: 0 8px 22px rgba(43, 217, 141, 0.3);
 
-  label {
-    font-weight: 600;
-    margin-top: 12px;
-    display: block;
-    color: var(--text);
-    transition: color 0.4s ease;
-  }
+        --radius-lg: 18px;
+        --radius-sm: 12px;
+        --gap: 14px;
+      }
 
-  input, textarea {
-    width: 100%;
-    padding: 10px 12px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    margin-top: 6px;
-    margin-bottom: 12px;
-    font-size: 1rem;
-    transition: border 0.2s, background 0.4s ease, color 0.4s ease;
-    background: var(--bg-container);
-    color: var(--text);
-  }
+      /* DEIN ursprünglicher Hintergrund (nicht angefasst) */
+      .bgAn {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        background: #000000;
+        --gap: 5em;
+        --line: 1px;
+        --color: rgba(255, 255, 255, 0.12);
+        background-image: linear-gradient(
+            -90deg,
+            transparent calc(var(--gap) - var(--line)),
+            var(--color) calc(var(--gap) - var(--line) + 1px),
+            var(--color) var(--gap)
+          ),
+          linear-gradient(
+            0deg,
+            transparent calc(var(--gap) - var(--line)),
+            var(--color) calc(var(--gap) - var(--line) + 1px),
+            var(--color) var(--gap)
+          );
+        background-size: var(--gap) var(--gap);
+        background-repeat: repeat;
+      }
 
-  input:focus, textarea:focus {
-    outline: none;
-    border-color: var(--btn);
-    box-shadow: 0 0 6px rgba(74,144,226,0.3);
-  }
+      /* Layout */
+      body {
+        margin: 0;
+        min-height: 100dvh;
+        background: var(--bg);
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        font-family: "Segoe UI", Roboto, Arial, sans-serif;
+      }
+      .content {
+        position: relative;
+        z-index: 1;
+        width: min(760px, 100%);
+      }
 
-  textarea {
-    min-height: 120px;
-    resize: vertical;
-  }
+      /* Box im Glass-/Glow-Stil, farblich neutral + weißer Schein */
+      .container {
+        background: var(--card-bg);
+        border-radius: var(--radius-lg);
+        padding: clamp(28px, 4.5vw, 44px);
+        box-shadow: var(--card-shadow);
+        backdrop-filter: blur(14px) saturate(115%);
+        -webkit-backdrop-filter: blur(14px) saturate(115%);
+        border: 1px solid var(--card-border);
+      }
 
-  .row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 10px;
-  }
+      /* ganz feiner weißer Saum, damit es zum Grid passt */
+      .container::before {
+        content: "";
+        position: absolute;
+        inset: -1px;
+        pointer-events: none;
+        border-radius: inherit;
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.22);
+      }
 
-  button {
-    flex: 1;
-    background: var(--btn);
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    padding: 10px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background 0.2s, transform 0.1s, color 0.4s ease;
-  }
+      h1 {
+        margin: 0 0 10px;
+        font-size: clamp(22px, 3.4vw, 30px);
+        letter-spacing: 0.2px;
+        color: #ffffff;
+        text-shadow: 0 0 24px rgba(255, 255, 255, 0.25);
+      }
+      .small,
+      .subtitle {
+        color: var(--text-dim);
+        margin: 0 0 18px;
+        font-size: 14px;
+      }
 
-  button:hover {
-    background: var(--btn-hover);
-  }
+      label {
+        display: block;
+        font-weight: 600;
+        margin: 18px 0 8px;
+      }
 
-  button:active {
-    transform: scale(0.97);
-  }
+      textarea,
+      input {
+        width: 100%;
+        color: var(--text);
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: var(--radius-sm);
+        padding: 12px 14px;
+        font-size: 16px;
+        line-height: 1.45;
+        outline: none;
+        transition: box-shadow 0.15s ease, border-color 0.15s ease,
+          background 0.15s ease;
+      }
+      textarea {
+        min-height: 140px;
+        resize: vertical;
+      }
+      textarea:focus,
+      input:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 2px var(--accent-weak),
+          0 0 22px rgba(255, 255, 255, 0.18);
+        background: rgba(255, 255, 255, 0.06);
+      }
 
-  .secondary {
-    background: var(--btn-secondary);
-  }
+      .row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--gap);
+        margin-top: 14px;
+      }
+      @media (max-width: 640px) {
+        .row {
+          flex-direction: column;
+        }
+      }
 
-  .secondary:hover {
-    background: var(--btn-secondary-hover);
-  }
+      .btn {
+        appearance: none;
+        border: none;
+        cursor: pointer;
+        color: #fff;
+        font-weight: 600;
+        font-size: 15px;
+        background: var(--btn-bg);
+        border: 1px solid var(--btn-border);
+        border-radius: 12px;
+        padding: 11px 16px;
+        transition: transform 0.06s ease, background 0.15s ease,
+          border-color 0.15s ease, box-shadow 0.15s ease;
+      }
+      .btn:hover {
+        background: var(--btn-bg-hover);
+        border-color: var(--accent);
+        box-shadow: 0 0 0 2px var(--accent-weak),
+          0 6px 26px rgba(255, 255, 255, 0.18);
+      }
+      .btn:active {
+        transform: translateY(1px);
+      }
 
-  .copy-btn {
-    background: var(--btn-copy);
-  }
+      .btn--copy {
+        background: var(--btn-copy-bg);
+        border: none;
+        box-shadow: var(--btn-copy-shadow);
+      }
+      .btn--copy:hover {
+        filter: brightness(1.06);
+        box-shadow: 0 10px 26px rgba(43, 217, 141, 0.36);
+      }
 
-  .copy-btn:hover {
-    background: var(--btn-copy-hover);
-  }
-
-  .small {
-    font-size: 0.9rem;
-    color: var(--text-light);
-    margin-bottom: 12px;
-    text-align: center;
-    transition: color 0.4s ease;
-  }
-
-  .dark-toggle {
-    position: absolute;
-    top: 16px;
-    right: 20px;
-    background: var(--btn-secondary);
-    color: #fff;
-    border: none;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    font-size: 1.2rem;
-    cursor: pointer;
-    transition: background 0.3s, transform 0.2s;
-  }
-
-  .dark-toggle:hover {
-    background: var(--btn-secondary-hover);
-    transform: rotate(20deg);
-  }
-
-  @media (max-width: 600px) {
-    .row { flex-direction: column; }
-    button { flex: none; width: 100%; }
-  }
+      /* Tiny toast statt alert() */
+      .toast {
+        position: fixed;
+        left: 50%;
+        bottom: 22px;
+        transform: translateX(-50%) translateY(16px);
+        padding: 10px 14px;
+        border-radius: 10px;
+        font-size: 14px;
+        color: #0b0b0f;
+        background: #e7fff7;
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.18s ease, transform 0.18s ease;
+        z-index: 2;
+      }
+      .toast.show {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
     </style>
 </head>
 <body>
