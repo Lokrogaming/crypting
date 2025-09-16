@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>AES-GCM Passwortverschlüsselung</title>
+<style>
+  :root {
+    --bg: #eef2f3;
+    --bg-container: #fff;
+    --text: #222;
+    --text-light: #666;
+    --btn: #4A90E2;
+    --btn-hover: #357ABD;
+    --btn-copy: #27ae60;
+    --btn-copy-hover: #1e8449;
+    --btn-secondary: #666;
+    --btn-secondary-hover: #444;
+  }
+
+  body.dark {
+    --bg: #121212;
+    --bg-container: #1e1e1e;
+    --text: #f5f5f5;
+    --text-light: #aaa;
+    --btn: #2980b9;
+    --btn-hover: #1f6391;
+    --btn-copy: #2ecc71;
+    --btn-copy-hover: #27ae60;
+    --btn-secondary: #888;
+    --btn-secondary-hover: #aaa;
+  }
+
+  body {
+    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+    background: var(--bg);
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    transition: background 0.4s ease, color 0.4s ease;
+  }
+
+  .container {
+    background: var(--bg-container);
+    border-radius: 16px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+    padding: 24px;
+    max-width: 700px;
+    width: 100%;
+    color: var(--text);
+    transition: background 0.4s ease, color 0.4s ease;
+  }
+
+  h1 {
+    margin-top: 0;
+    font-size: 1.8rem;
+    text-align: center;
+    color: var(--text);
+    transition: color 0.4s ease;
+  }
+
+  label {
+    font-weight: 600;
+    margin-top: 12px;
+    display: block;
+    color: var(--text);
+    transition: color 0.4s ease;
+  }
+
+  input, textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin-top: 6px;
+    margin-bottom: 12px;
+    font-size: 1rem;
+    transition: border 0.2s, background 0.4s ease, color 0.4s ease;
+    background: var(--bg-container);
+    color: var(--text);
+  }
+
+  input:focus, textarea:focus {
+    outline: none;
+    border-color: var(--btn);
+    box-shadow: 0 0 6px rgba(74,144,226,0.3);
+  }
+
+  textarea {
+    min-height: 120px;
+    resize: vertical;
+  }
+
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  button {
+    flex: 1;
+    background: var(--btn);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s, color 0.4s ease;
+  }
+
+  button:hover {
+    background: var(--btn-hover);
+  }
+
+  button:active {
+    transform: scale(0.97);
+  }
+
+  .secondary {
+    background: var(--btn-secondary);
+  }
+
+  .secondary:hover {
+    background: var(--btn-secondary-hover);
+  }
+
+  .copy-btn {
+    background: var(--btn-copy);
+  }
+
+  .copy-btn:hover {
+    background: var(--btn-copy-hover);
+  }
+
+  .small {
+    font-size: 0.9rem;
+    color: var(--text-light);
+    margin-bottom: 12px;
+    text-align: center;
+    transition: color 0.4s ease;
+  }
+
+  /* Darkmode Toggle */
+  .dark-toggle {
+    position: absolute;
+    top: 16px;
+    right: 20px;
+    background: var(--btn-secondary);
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+  }
+
+  .dark-toggle:hover {
+    background: var(--btn-secondary-hover);
+    transform: rotate(20deg);
+  }
+
+  @media (max-width: 600px) {
+    .row { flex-direction: column; }
+    button { flex: none; width: 100%; }
+  }
+</style>
+</head>
+<body>
+<button id="darkModeBtn" class="dark-toggle">🌙</button>
+
+<div class="container">
+  <h1>AES-GCM Passwortverschlüsselung</h1>
+  <p class="small">Die Ausgabe ist Base64(salt||iv||ciphertext). Passwort wird automatisch generiert.</p>
+
+  <label>Generiertes Passwort</label>
+  <div class="row">
+    <input id="password" type="text" readonly />
+    <button id="copyPwBtn" class="copy-btn">📋 Passwort</button>
+  </div>
+
+  <label>Plaintext (zum Verschlüsseln)</label>
+  <textarea id="plaintext" placeholder="Text hier..."></textarea>
+
+  <div class="row">
+    <button id="encryptBtn">Verschlüsseln</button>
+    <button id="decryptBtn">Entschlüsseln</button>
+    <button id="clearBtn" class="secondary">Leeren</button>
+  </div>
+
+  <label>Base64 (Salt||IV||Ciphertext)</label>
+  <textarea id="output" placeholder="Base64-Ausgabe"></textarea>
+  <button id="copyOutBtn" class="copy-btn">📋 Code</button>
+</div>
+
+<script>
+/* Parameter */
+const PBKDF2_ITER = 100000;
+const SALT_LEN = 16;
+const IV_LEN = 12;
+const KEY_LEN = 256;
+
+function toBase64(buffer) {
+  return btoa(String.fromCharCode(...new Uint8Array(buffer)));
+}
+function fromBase64(b64) {
+  const bin = atob(b64);
+  const bytes = new Uint8Array(bin.length);
+  for (let i=0;i<bin.length;i++) bytes[i]=bin.charCodeAt(i);
+  return bytes.buffer;
+}
+
+async function deriveKey(password, salt) {
+  const enc = new TextEncoder();
+  const pwKey = await crypto.subtle.importKey(
+    'raw', enc.encode(password), {name:'PBKDF2'}, false, ['deriveKey']
+  );
+  return crypto.subtle.deriveKey(
+    {name:'PBKDF2', salt: salt, iterations: PBKDF2_ITER, hash: 'SHA-256'},
+    pwKey,
+    {name:'AES-GCM', length: KEY_LEN},
+    false,
+    ['encrypt','decrypt']
+  );
+}
+
+function randBytes(len){
+  const b = new Uint8Array(len);
+  crypto.getRandomValues(b);
+  return b;
+}
+
+/* Passwort-Generator */
+function generatePassword(length=16){
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let result = "";
+  for (let i=0;i<length;i++){
+    result += chars.charAt(Math.floor(Math.random()*chars.length));
+  }
+  return result;
+}
+
+async function encrypt(password, plainText) {
+  const salt = randBytes(SALT_LEN);
+  const iv = randBytes(IV_LEN);
+  const key = await deriveKey(password, salt);
+  const enc = new TextEncoder();
+  const ct = await crypto.subtle.encrypt({name:'AES-GCM', iv: iv}, key, enc.encode(plainText));
+  const combined = new Uint8Array(salt.byteLength + iv.byteLength + ct.byteLength);
+  combined.set(salt,0);
+  combined.set(iv, salt.byteLength);
+  combined.set(new Uint8Array(ct), salt.byteLength + iv.byteLength);
+  return toBase64(combined.buffer);
+}
+
+async function decrypt(password, b64combined) {
+  const buf = fromBase64(b64combined);
+  const data = new Uint8Array(buf);
+  if (data.length < SALT_LEN + IV_LEN + 16) throw new Error('Daten zu kurz / ungültiges Format.');
+  const salt = data.slice(0,SALT_LEN).buffer;
+  const iv = data.slice(SALT_LEN, SALT_LEN+IV_LEN).buffer;
+  const ct = data.slice(SALT_LEN+IV_LEN).buffer;
+  const key = await deriveKey(password, salt);
+  const plainBuf = await crypto.subtle.decrypt({name:'AES-GCM', iv: iv}, key, ct);
+  return new TextDecoder().decode(plainBuf);
+}
+
+/* UI */
+document.getElementById('encryptBtn').addEventListener('click', async ()=>{
+  let pwField = document.getElementById('password');
+  if(!pwField.value){ 
+    pwField.value = generatePassword();
+  }
+  const pw = pwField.value;
+  const pt = document.getElementById('plaintext').value;
+  try{
+    if(!pw) throw new Error('Passwort erforderlich');
+    const b64 = await encrypt(pw, pt);
+    document.getElementById('output').value = b64;
+    alert('Verschlüsselt ✅');
+  }catch(e){ alert('Fehler: '+e.message); }
+});
+
+document.getElementById('decryptBtn').addEventListener('click', async ()=>{
+  const pw = document.getElementById('password').value;
+  const b64 = document.getElementById('output').value.trim();
+  try{
+    if(!pw) throw new Error('Passwort erforderlich');
+    const pt = await decrypt(pw, b64);
+    document.getElementById('plaintext').value = pt;
+    alert('Entschlüsselt ✅');
+  }catch(e){ alert('Fehler beim Entschlüsseln: '+e.message); }
+});
+
+document.getElementById('clearBtn').addEventListener('click', ()=>{
+  document.getElementById('password').value='';
+  document.getElementById('plaintext').value='';
+  document.getElementById('output').value='';
+});
+
+/* Copy Buttons */
+document.getElementById('copyPwBtn').addEventListener('click', ()=>{
+  const pw = document.getElementById('password').value;
+  if(pw){
+    navigator.clipboard.writeText(pw);
+    alert("Passwort kopiert 📋");
+  }
+});
+document.getElementById('copyOutBtn').addEventListener('click', ()=>{
+  const out = document.getElementById('output').value;
+  if(out){
+    navigator.clipboard.writeText(out);
+    alert("Code kopiert 📋");
+  }
+});
+
+/* Darkmode Toggle */
+const darkBtn = document.getElementById("darkModeBtn");
+darkBtn.addEventListener("click", ()=>{
+  document.body.classList.toggle("dark");
+  darkBtn.textContent = document.body.classList.contains("dark") ? "☀️" : "🌙";
+});
+</script>
+</body>
+</html>
