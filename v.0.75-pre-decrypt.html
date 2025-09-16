@@ -219,7 +219,7 @@
       
         <!-- Plaintext 
         <label>Plaintext (zum Verschlüsseln)</label>
-        <textarea id="plaintext" placeholder="Text hier..."></textarea>
+        <textarea id="plainte" placeholder="Text hier..."></textarea>
       
         <div class="row">
           <button id="encryptBtn">Verschlüsseln</button>
@@ -338,7 +338,7 @@
       
       document.getElementById('clearBtn').addEventListener('click', ()=>{
         genPasswordField.value = generatePassword();
-        document.getElementById('decPassword').value = ''; 
+        
         document.getElementById('combinedInput').value='';
         document.getElementById('plaintext').value='';
       });
@@ -369,3 +369,4 @@
 </body>
 
 </html>
+
