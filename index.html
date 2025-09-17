@@ -461,7 +461,7 @@ More comprehensive version at shenanigans.shoghisimon.ca/collection/css
   // Gruppiere nach Kategorie
   const groupedByCategory = {};
   filteredData.forEach(item => {
-    const category = item.category || "Unsortiert";
+    const category = toUpperCase(item.category) || "Unsortiert";
     if (!groupedByCategory[category]) {
       groupedByCategory[category] = [];
     }
@@ -531,6 +531,7 @@ More comprehensive version at shenanigans.shoghisimon.ca/collection/css
         </script>
         </body>
 </html>
+
 
 
 
