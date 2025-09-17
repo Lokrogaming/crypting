@@ -249,7 +249,7 @@
 <label>Verschlüsselte Nachricht</label>
 <textarea id="combinedInput" placeholder="Hier verschlüsselte Nachricht eingeben"></textarea>
   <div class="row">
-          <button id="decryptBtn" class="btn">🔐 Verschlüsseln</button>
+          <button id="decryptCombinedBtn" class="btn">🔐 Verschlüsseln</button>
           <button id="clearBtn" class="btn">🧹 Leeren</button>
         </div>
 
@@ -372,13 +372,13 @@ function toast(msg) {
       document.getElementById("clearBtn").addEventListener("click", () => {
         genPasswordField.value = generatePassword();
         document.getElementById("plaintext").value = "";
-        document.getElementById("output").value = "";
+        document.getElementById("combinedInput").value = "";
         toast("Bereinigt 🧽");
       });
 
 
       document.getElementById("copyOutBtn").addEventListener("click", () => {
-        const out = document.getElementById("output").value;
+        const out = document.getElementById("plaintext").value;
         if (out) {
           navigator.clipboard.writeText(out);
           toast("Kopiert 📋");
