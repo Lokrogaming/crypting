@@ -374,6 +374,15 @@
       </div>
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
       <script>
+            /* ===== LOADER ===== */
+      const loader = document.getElementById("ai-matrix-loader");
+      const content = document.getElementById("content");
+      function loading() {
+setTimeout( () => {
+loader.style.display = "none";
+  content.style.display = "block";
+}, 4000);
+      }
       /* Parameter */
       const PBKDF2_ITER = 100000;
       const SALT_LEN = 16;
@@ -506,6 +515,7 @@ function toast(msg) {
         document.body.classList.toggle("dark");
         darkBtn.textContent = document.body.classList.contains("dark") ? "☀️" : "🌙";
       });
+          loading();
       </script>
 </body>
 </html>
