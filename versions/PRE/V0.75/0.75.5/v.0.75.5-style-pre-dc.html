@@ -452,7 +452,7 @@ function toast(msg) {
       async function decrypt(password, b64combined) {
         const buf = fromBase64(b64combined);
         const data = new Uint8Array(buf);
-        if (data.length < SALT_LEN + IV_LEN + 16) throw new Error('Daten zu kurz / ungültiges Format.');
+        if (data.length < SALT_LEN + IV_LEN + 16) toast('Daten zu kurz / ungültiges Format.');
         const salt = data.slice(0,SALT_LEN).buffer;
         const iv = data.slice(SALT_LEN, SALT_LEN+IV_LEN).buffer;
         const ct = data.slice(SALT_LEN+IV_LEN).buffer;
@@ -468,16 +468,16 @@ function toast(msg) {
       document.getElementById('decryptCombinedBtn').addEventListener('click', async () => {
   const combined = document.getElementById('combinedInput').value.trim();
   try {
-    if (!combined.includes(":")) throw new Error("Ungültiges Format.");
+    if (!combined.includes(":")) toast("Ungültiges Format.");
 
     const [b64, pw] = combined.split(":");
-    if (!b64 || !pw) throw new Error("Fehlende Nachricht");
+    if (!b64 || !pw) toast("Fehlende Nachricht");
 
     const pt = await decrypt(pw, b64);
     document.getElementById('plaintext').value = pt;
-    alert("Kombinierte Entschlüsselung erfolgreich ✅");
+    toast("Kombinierte Entschlüsselung erfolgreich ✅");
   } catch (e) {
-    alert("Fehler bei kombinierter Entschlüsselung: " + e.message);
+    toast("Fehler bei kombinierter Entschlüsselung: " + e.message);
   }
 });
 
