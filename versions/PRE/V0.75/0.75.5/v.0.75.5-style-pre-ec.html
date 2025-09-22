@@ -396,7 +396,7 @@ loader.style.display = "none";
         setTimeout(() => t.classList.remove("show"), 1500);
       }
       function combineOutput(encrypted, password) {
-        return `${encrypted}:${password}`;
+        return `${encrypted}ū${password}`;
       }
       function toBase64(buffer) {
         return btoa(String.fromCharCode(...new Uint8Array(buffer)));
