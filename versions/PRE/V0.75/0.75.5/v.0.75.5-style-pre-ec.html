@@ -215,13 +215,127 @@
         opacity: 1;
         transform: translateX(-50%) translateY(0);
       }
+      /* From Uiverse.io by PriyanshuGupta28 */ 
+.ai-matrix-loader {
+  width: 120px;
+  height: 160px;
+  margin: 30px auto;
+  position: relative;
+  perspective: 800px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px;
+  z-index: 999;
+}
+
+.digit {
+  color: #00ff88;
+  font-family: monospace;
+  font-size: 18px;
+  text-align: center;
+  text-shadow: 0 0 5px #00ff88;
+  animation:
+    matrix-fall 2s infinite,
+    matrix-flicker 0.5s infinite;
+  opacity: 0;
+}
+
+.digit:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.digit:nth-child(2) {
+  animation-delay: 0.3s;
+}
+.digit:nth-child(3) {
+  animation-delay: 0.5s;
+}
+.digit:nth-child(4) {
+  animation-delay: 0.7s;
+}
+.digit:nth-child(5) {
+  animation-delay: 0.9s;
+}
+.digit:nth-child(6) {
+  animation-delay: 1.1s;
+}
+.digit:nth-child(7) {
+  animation-delay: 1.3s;
+}
+.digit:nth-child(8) {
+  animation-delay: 1.5s;
+}
+
+.glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(
+    circle,
+    rgba(0, 255, 136, 0.1) 0%,
+    transparent 70%
+  );
+  animation: matrix-pulse 2s infinite;
+}
+
+@keyframes matrix-fall {
+  0% {
+    transform: translateY(-50px) rotateX(90deg);
+    opacity: 0;
+  }
+  20%,
+  80% {
+    transform: translateY(0) rotateX(0deg);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(50px) rotateX(-90deg);
+    opacity: 0;
+  }
+}
+
+@keyframes matrix-flicker {
+  0%,
+  19%,
+  21%,
+  100% {
+    opacity: 0.8;
+  }
+  20% {
+    opacity: 0.2;
+  }
+}
+
+@keyframes matrix-pulse {
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
     </style>
 </head>
   <body>
     <!-- Dein Grid-Background bleibt -->
     <div class="bgAn"></div>
+<!-- From Uiverse.io by PriyanshuGupta28 --> 
+<div id="ai-matrix-loader" class="ai-matrix-loader">
+  <div class="digit">0</div>
+  <div class="digit">1</div>
+  <div class="digit">0</div>
+  <div class="digit">1</div>
+  <div class="digit">1</div>
+  <div class="digit">0</div>
+  <div class="digit">0</div>
+  <div class="digit">1</div>
+  <div class="glow"></div>
+</div>
 
-    <div class="content">
+    <div id="content" style="display: none;" class="content">
       <div class="container">
         <h1>AES-GCM Passwortverschlüsselung</h1>
         <p class="small">
@@ -259,6 +373,14 @@
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
     <script>
+      const loader = document.getElementById("ai-matrix-loader")
+      const content = document.getElementById("content");
+      function loading() {
+setTimeout( () => {
+loader.style.display = "none";
+  content.style.display = "block";
+}, 4000);
+      }
       /* ====== Krypto-Parameter ====== */
       const PBKDF2_ITER = 100000;
       const SALT_LEN = 16;
