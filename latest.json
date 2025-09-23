@@ -1,32 +1,46 @@
 [
     {
-        "latest": true,
-        "filepath": "versions/v.0.25-latest.html",
-        "name": "0.25.0",
-        "category": "latest"
+        "latest": false,
+        "filepath": "#",
+        "name": "[OUTDATED] 0.25.0",
+        "category": "outdated"
     },
     {
         "latest": false,
         "pre": true,
-        "filepath": "versions/PRE/v.0.5-pre.html",
-        "name": "0.5.0 Beta",
-        "category": "pre"
+        "filepath": "#",
+        "name": "[OUTDATED] 0.5.0 Beta",
+        "category": "outdated"
     },
     {
         "latest": false,
         "pre": false,
         "dev": true,
-        "filepath": "versions/PRE/V0.75/v.0.75-pre-encrypt.html",
-        "name": "0.75 Encrypt Dev",
-        "category": "encrypt"
+        "filepath": "#",
+        "name": "[OUTDATED] 0.75 Encrypt Dev",
+        "category": "outdated"
     },
     {
         "latest": false,
         "pre": false,
         "dev": true,
-        "filepath": "versions/PRE/V0.75/v.0.75-pre-decrypt.html",
-        "name": "0.75 Decrypt Dev",
-        "category": "decrypt"
+        "filepath": "#",
+        "name": "[OUTDATED] 0.75 Decrypt Dev",
+        "category": "outdated"
+    },
+    {
+        "latest": true,
+        "pre": false,
+        "dev": false,
+        "filepath": "versions/v.0.75.5-latest-ec.html",
+        "category": "encrypt / verschlüseln"
+    },
+    {
+        "latest": true,
+        "pre": false,
+        "dev": false,
+        "filepath": "versions/v.0.75.5-latest-dc.html",
+        "category": "decrypt / entschlüsseln"
     }
 
 ]
